@@ -125,3 +125,83 @@ class StudentPanel:
             err(f"  Error: {e}")
 
         input("\n  Press Enter to continue...")
+
+    def view_grade_chart(self):
+        """
+        Display a matplotlib bar chart of the student's grades in a window.
+        """
+        clear_screen(); banner(); section("MY GRADE CHART")
+
+        try:
+            # Fetch grades for student
+            grades = fh.get_student_grades(self.user.user_id)
+
+            # Convert marks and labels
+            marks  = [float(grades[s]) for s in SUBJECTS]
+            labels = [s.capitalize() for s in SUBJECTS]
+
+            # Calculate average score
+            average = sum(marks) / len(marks)
+
+            # Assign bar colors based on performance
+            # Green: >=70, Orange: >=50, Red: <50
+            colors = [
+                "#4CAF50" if m >= 70 else
+                "#FF9800" if m >= 50 else
+                "#F44336"
+                for m in marks
+            ]
+
+            # Create bar chart figure
+            fig, ax = plt.subplots(figsize=(9, 5))
+            bars = ax.bar(labels, marks, color=colors, edgecolor="white", linewidth=1.2)
+
+            # Draw average line
+            ax.axhline(
+                y=average,
+                color="#2196F3",
+                linestyle="--",
+                linewidth=1.8,
+                label=f"Average: {average:.1f}"
+            )
+
+            # Draw pass mark line
+            ax.axhline(
+                y=50,
+                color="red",
+                linestyle=":",
+                linewidth=1.2,
+                alpha=0.6,
+                label="Pass mark: 50"
+            )
+
+            # Annotate each bar with value
+            for bar, m in zip(bars, marks):
+                ax.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    m + 1.5,
+                    f"{m:.0f}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=10
+                )
+
+            # Chart formatting
+            ax.set_ylim(0, 115)
+            ax.set_ylabel("Marks", fontsize=11)
+            ax.set_title(
+                f"Grade Chart — {self.user.full_name}",
+                fontsize=13,
+                fontweight="bold"
+            )
+            ax.legend()
+
+            plt.tight_layout()
+
+            # Show the chart window
+            plt.show()
+
+        except Exception as e:
+            err(f"  Error generating chart: {e}")
+
+        input("\n\n  Press Enter to continue...")
