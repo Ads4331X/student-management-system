@@ -21,7 +21,7 @@ class AdminPanel:
         self.user = user
         self.auth = AuthSystem()
 
-    # add new student
+    # Add New Student 
     def add_student(self):
         """Prompt admin to enter details and register a new student."""
         clear_screen(); banner(); section("ADD NEW STUDENT") # clears screen , displays banner and shows selection of add new student
@@ -43,6 +43,29 @@ class AdminPanel:
                     user_id, username, name, email, phone, address, password
                 )
                 ok(f"  {msg}") if success else err(f"  {msg}")
+
+        except Exception as e:
+            err(f"  Error: {e}")
+
+        input("\n  Press Enter to continue...")
+
+    #  View All Students 
+    def view_all_students(self):
+        """Display a table of all registered students."""
+        clear_screen(); banner(); section("ALL STUDENTS") # clear screen, show banner and section header
+
+        try:
+            users = fh.load_users() # loads all users {username: user obj}
+            students = [u for u in users.values() if u.role == "student"]
+
+            if not students:
+                info("  No students found.") 
+            else:
+                print(f"\n  {'ID':<8} {'Username':<12} {'Full Name':<22} {'Email'}") 
+                print("  " + "─" * 65)
+                for s in sorted(students, key=lambda u: u.user_id): # sort by user id
+                    print(f"  {s.user_id:<8} {s.username:<12} {s.full_name:<22} {s.email}")
+                print(f"\n  Total: {len(students)} student(s)")
 
         except Exception as e:
             err(f"  Error: {e}")
