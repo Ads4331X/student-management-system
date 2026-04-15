@@ -21,7 +21,7 @@ ALERT_AVG = 55.0      # Below this average = at-risk student
 
 
 class AnalyticsDashboard:
-    """Provides administrative analytics dashboard with charts and statistics"""
+    """Provides administrative analytics dashboard with charts and statistics."""
 
     # full dashboard 
     def show_dashboard(self):
@@ -108,8 +108,40 @@ class AnalyticsDashboard:
             for i, v in enumerate(subj_means): # add values labels above the bar
                 ax1.text(i, v + 1, f"{v:.1f}", ha="center", fontsize=9)
 
+            # pannel-2
+            # Per-student average (horizontal bar)
+            ax2 = axes[0, 1]
+            names = [] # list to store names
+            for sid in df["student_id"]: # extract student name
+                u = fh.get_user_by_id(sid) # get user by its id
+                names.append(u.full_name.split()[0] if u else sid) # if name not found use student_id
+            avgs = df["average"].values
+            # Color-code students based on performance
+            colors2 = [
+                "#4CAF50" if a >= 70 else
+                "#FF9800" if a >= 50 else
+                "#F44336"
+                for a in avgs
+            ]
+            # Horizontal bar chart for student averages
+            ax2.barh(names, avgs, color=colors2, edgecolor="white")
+            # Pass mark reference line
+            ax2.axvline(
+                x=PASS_MARK,
+                color="red",
+                linestyle="--",
+                alpha=0.5,
+                label="Pass mark"
+            )
+            ax2.set_title("Student Averages", fontweight="bold")
+            ax2.set_xlabel("Average Mark")
+            ax2.set_xlim(0, 105)
+            ax2.legend(fontsize=8)
 
         except Exception as e:
             err(f"  Dashboard error: {e}")
 
         input("\n\n  Press Enter to continue...")
+
+  
+  
