@@ -57,6 +57,24 @@ class AnalyticsDashboard:
             for s in SUBJECTS:
                 col = df[s].astype(float)
                 print(f"  {s.capitalize():<18} {col.mean():>7.1f}  {col.max():>6.1f}  {col.min():>6.1f}  {col.std():>6.1f}")
+
+            # ECA correlation 
+            # counts the number of ECA per student 
+            eca_counts = {sid: len(acts) for sid, acts in eca.items()}
+            # map ECA counts to dataframe (missing values become 0)
+            df["eca_count"] = df["student_id"].map(eca_counts).fillna(0)
+
+            # calculates correlation
+            correlation = np.corrcoef(df["eca_count"].values, df["average"].values)[0, 1]
+            print(f"\n  ECA ↔ Grade correlation coefficient: {correlation:.3f}")
+
+            # categorize the correlation
+            if correlation > 0.3:
+                info("  Positive trend: more ECA activities → higher grades.")
+            elif correlation < -0.3:
+                info("  Negative trend: more ECA activities → lower grades.")
+            else:
+                info("  No strong correlation between ECA and grades.")
         except Exception as e:
             err(f"  Dashboard error: {e}")
 
