@@ -147,3 +147,119 @@ class AdminPanel:
         input("\n  Press Enter to continue...")
 
  
+    # update grades 
+    def update_grades(self):
+        """Enter or update marks for a student across all five subjects."""
+        clear_screen(); banner(); section("UPDATE GRADES")
+
+        try:
+            # gets student_id from the admin
+            uid = input("  Enter Student ID: ").strip().upper()
+            user = fh.get_user_by_id(uid) # gets user from its id
+
+            if not user or user.role != "student": # not found
+                err(f"  Student '{uid}' not found.")
+                input("\n  Press Enter to continue...")
+                return
+
+            current = fh.get_student_grades(uid) # get existing grades for the student
+            # Display current grades in a formatted table
+            print(f"\n  Current grades for {user.full_name}:")
+            print(f"\n  {'Subject':<18} {'Current':>8}")
+            print("  " + "─" * 28)
+            for s in SUBJECTS: 
+                print(f"  {s.capitalize():<18} {current[s]:>8.1f}")
+
+            print("\n  Enter new marks (0-100). Press Enter to keep current.\n")
+             
+            new_marks = {}  # Dictionary to store updated grades
+
+             # Loop through each subject and get new marks
+            for s in SUBJECTS:
+                while True:
+                    val = input(f"  {s.capitalize()} [{current[s]:.1f}]: ").strip()
+                    if val == "": # Keep existing value if input is empty
+                        new_marks[s] = current[s]
+                        break
+                    try:
+                        m = float(val)
+                        if 0 <= m <= 100: # Validate mark range
+                            new_marks[s] = m
+                            break
+                        else:
+                            err("  Must be between 0 and 100.")
+                    except ValueError:
+                        err("  Enter a valid number.")
+
+            fh.upsert_student_grades(uid, new_marks) # Save updated grades 
+            ok("\n  Grades updated successfully.")
+
+        except Exception as e: # Catch unexpected errors and display message
+            err(f"  Error: {e}")
+
+        input("\n  Press Enter to continue...")
+
+    # update ECA 
+    def update_eca(self):
+        """Add or remove ECA activities for a student."""
+        clear_screen(); banner(); section("UPDATE ECA") # clear screen , display banner and 
+
+        try:
+            # gets student_id from the admin
+            uid = input("  Enter Student ID: ").strip().upper()
+            user = fh.get_user_by_id(uid) # Fetch user object using student ID
+
+            if not user or user.role != "student": # not found
+                err(f"  Student '{uid}' not found.")
+                input("\n  Press Enter to continue...")
+                return
+
+            activities = fh.get_student_eca(uid) # Retrieve existing eca for the student
+            # Display current ECA activities
+            print(f"\n  ECA for {user.full_name}:")
+            if activities:
+                for i, a in enumerate(activities, 1):
+                    print(f"  [{i}] {a}")
+            else:
+                info("  No activities yet.")
+
+            print("\n  [1] Add activity  [2] Remove activity  [3] Clear all  [0] Cancel") # menu
+            choice = input("\n  Choice: ").strip() 
+
+            # add a new activity
+            if choice == "1":
+                name = input("  Activity name: ").strip()
+                if name: # validate activity name
+                    activities.append(name)
+                    fh.upsert_student_eca(uid, activities)
+                    ok(f"  Added: {name}")
+                else:
+                    err("  Activity name cannot be empty.")
+
+            # remove a activity
+            elif choice == "2":
+                if not activities:
+                    info("  Nothing to remove.")
+                else:
+                    try:
+                        idx = int(input("  Enter number to remove: ").strip()) - 1 # Convert user input to list index
+                        if 0 <= idx < len(activities): # Validate index range
+                            removed = activities.pop(idx)
+                            fh.upsert_student_eca(uid, activities)
+                            ok(f"  Removed: {removed}")
+                        else:
+                            err("  Invalid number.")
+                    except ValueError:
+                        err("  Enter a valid number.")
+            # clear all activities
+            elif choice == "3":
+                fh.upsert_student_eca(uid, [])
+                ok("  All activities cleared.")
+
+        except Exception as e:
+            # Handle unexpected runtime errors
+            err(f"  Error: {e}")
+
+        input("\n  Press Enter to continue...")
+
+  
