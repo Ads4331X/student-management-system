@@ -263,3 +263,78 @@ class AdminPanel:
         input("\n  Press Enter to continue...")
 
   
+    # grade insights 
+    def view_insights(self):
+        """
+        Show grade statistics using numpy and pandas:
+        - Subject averages, highest, lowest
+        - Student ranking by average
+        - ECA participation count
+        """
+        clear_screen(); banner(); section("GRADE INSIGHTS")
+
+        try:
+            # load grades users and ECA
+            df_grades = fh.load_grades()
+            users = fh.load_users()
+            eca = fh.load_eca()
+
+            if df_grades.empty: # check if grade data exists
+                info("  No grade data available.")
+                input("\n  Press Enter to continue...")
+                return
+
+            # Subject stats using numpy 
+            print("\n  SUBJECT STATISTICS (numpy)\n")
+            # print table header
+            print(f"  {'Subject':<18} {'Average':>8}  {'Highest':>8}  {'Lowest':>7}  {'Std Dev':>8}")
+            print("  " + "─" * 60)
+            # compute statistics for each subject
+            for s in SUBJECTS:
+                marks = df_grades[s].astype(float).values
+                print(f"  {s.capitalize():<18} "
+                      f"{np.mean(marks):>8.1f}  "
+                      f"{np.max(marks):>8.1f}  "
+                      f"{np.min(marks):>7.1f}  "
+                      f"{np.std(marks):>8.1f}")
+
+            # Student ranking using pandas 
+            df = df_grades.copy()
+            # compute student average across all subjects
+            df["average"] = df[SUBJECTS].astype(float).mean(axis=1)
+            # sort students by performance 
+            df = df.sort_values("average", ascending=False).reset_index(drop=True)
+
+            print("\n\n  STUDENT RANKING (pandas)\n")
+            print(f"  {'Rank':<6} {'ID':<8} {'Name':<22} {'Average':>8}  {'Grade'}")
+            print("  " + "─" * 56)
+
+            # display ranking table
+            for rank, row in df.iterrows():
+                sid = row["student_id"]
+                user = users.get(next((u for u in users if users[u].user_id == sid), ""), None) # find user object for name mapping
+                name = user.full_name if user else sid
+                avg = row["average"]
+                # Assign grade based on average
+                grade = (
+                "A" if avg >= 80 else
+                "B" if avg >= 70 else
+                "C" if avg >= 60 else
+                "D" if avg >= 50 else
+                "F"
+                )
+                print(f"  {rank+1:<6} {sid:<8} {name:<22} {avg:>8.1f}  {grade}")
+
+            # ECA participation 
+            print("\n\n  ECA PARTICIPATION\n")
+            # sort students by number of activities 
+            for sid, acts in sorted(eca.items(), key=lambda x: len(x[1]), reverse=True):
+                user = fh.get_user_by_id(sid)
+                name = user.full_name if user else sid
+                # Visual indicator using dots
+                print(f"  {name:<22}: {len(acts)} activities  {'●' * len(acts)}")
+
+        except Exception as e: # Catch unexpected errors
+            err(f"  Error: {e}")
+
+        input("\n\n  Press Enter to continue...") # Pause before returning
