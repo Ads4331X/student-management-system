@@ -116,3 +116,34 @@ class AdminPanel:
             err(f"  Error: {e}")
 
         input("\n  Press Enter to continue...")
+
+    # delete student
+    def delete_student(self):
+        """Delete a student and all their data after confirmation."""
+        clear_screen(); banner(); section("DELETE STUDENT")
+
+        try:
+            # gets student_id from the admin
+            uid = input("  Enter Student ID to delete: ").strip().upper()
+            user = fh.get_user_by_id(uid) # gets the user from its id
+
+            if not user or user.role != "student": # not found
+                err(f"  Student '{uid}' not found.")
+                input("\n  Press Enter to continue...")
+                return
+
+            print(f"\n  About to delete: {user.full_name} ({uid})")
+            confirm = input("  Type YES to confirm: ").strip()
+
+            if confirm == "YES":
+                success, msg = self.auth.delete_user(user.username) # delete the user
+                ok(f"  {msg}") if success else err(f"  {msg}")
+            else:
+                info("  Deletion cancelled.")
+
+        except Exception as e:
+            err(f"  Error: {e}")
+
+        input("\n  Press Enter to continue...")
+
+ 
