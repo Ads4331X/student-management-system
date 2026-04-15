@@ -1,6 +1,6 @@
 """
-Performance Analytics Dashboard (Task 2 bonus).
-Implement advanced analytics using pandas, numpy, matplotlib.
+Performance Analytics Dashboard
+Implement advanced analytics using pandas, numpy, matplotlib
 
 Features:
     - Grade trends per subject
@@ -21,17 +21,10 @@ ALERT_AVG = 55.0      # Below this average = at-risk student
 
 
 class AnalyticsDashboard:
-    """Provides administrative analytics dashboard with charts and statistics."""
+    """Provides administrative analytics dashboard with charts and statistics"""
 
     # full dashboard 
     def show_dashboard(self):
-        """
-        Display a 4-panel matplotlib dashboard:
-        1. Subject averages (bar)
-        2. Student averages (horizontal bar)
-        3. ECA vs grade average (scatter)
-        4. Grade letter distribution (pie)
-        """
         clear_screen(); banner(); section("ANALYTICS DASHBOARD") # UI setup
 
         try:
@@ -75,8 +68,48 @@ class AnalyticsDashboard:
                 info("  Negative trend: more ECA activities → lower grades.")
             else:
                 info("  No strong correlation between ECA and grades.")
+
+            # build matplotlib dashboard 
+            fig, axes = plt.subplots(2, 2, figsize=(13, 9))  # Create 2x2 subplot layout
+            fig.suptitle("Performance Analytics Dashboard", fontsize=15, fontweight="bold")
+            plt.subplots_adjust(hspace=0.4, wspace=0.35) # Adjust spacing between plots
+
+            # pannel-1
+            # Subject averages bar chart
+            ax1 = axes[0, 0]
+            subj_means = [df[s].astype(float).mean() for s in SUBJECTS] # calculate mean score per subject
+            # Colors based on performance level
+            colors1 = [
+                "#4CAF50" if m >= 70 else
+                "#FF9800" if m >= 50 else
+                "#F44336"
+                for m in subj_means
+            ]
+            # Plot bar chart for subject averages
+            ax1.bar(
+                [s[:6].capitalize() for s in SUBJECTS],
+                subj_means,
+                color=colors1,
+                edgecolor="white"
+            )
+            # Pass mark reference line
+            ax1.axhline(
+                y=PASS_MARK,
+                color="red",
+                linestyle="--",
+                alpha=0.5,
+                label="Pass mark"
+            )
+
+            ax1.set_title("Subject Averages", fontweight="bold")
+            ax1.set_ylabel("Average Mark")
+            ax1.set_ylim(0, 105)
+            ax1.legend(fontsize=8)
+            for i, v in enumerate(subj_means): # add values labels above the bar
+                ax1.text(i, v + 1, f"{v:.1f}", ha="center", fontsize=9)
+
+
         except Exception as e:
             err(f"  Dashboard error: {e}")
 
         input("\n\n  Press Enter to continue...")
-   
