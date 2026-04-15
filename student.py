@@ -13,7 +13,7 @@ from utils import clear_screen, banner, section, ok, err, info
 
 
 class StudentPanel:
-    """Student operations: view profile, grades, ECA, and personal chart."""
+    """Student operations view profile, grades, ECA, and personal chart."""
 
     def __init__(self, user):
         # Store logged-in student user object
@@ -67,5 +67,30 @@ class StudentPanel:
         except Exception as e:
             # Handle missing file or corrupted data
             err(f"  Error loading grades: {e}")
+
+        input("\n\n  Press Enter to continue...")
+
+    def view_eca(self):
+        """Show the student's ECA activities."""
+        clear_screen(); banner(); section("MY ECA ACTIVITIES")
+
+        try:
+            # Fetch extracurricular activities list
+            activities = fh.get_student_eca(self.user.user_id)
+
+            # If no activities found
+            if not activities:
+                info("  No ECA activities recorded yet.")
+            else:
+                print()
+
+                # Display all activities with numbering
+                for i, act in enumerate(activities, 1):
+                    print(f"  [{i}] {act}")
+
+                print(f"\n  Total: {len(activities)} activities")
+
+        except Exception as e:
+            err(f"  Error: {e}")
 
         input("\n\n  Press Enter to continue...")
