@@ -11,7 +11,7 @@ import pandas as pd
 from models import User, Student, Admin, SUBJECTS
 
 #  file paths
-DATA_DIR = os.path.join(os.path.dirname(_file_), "data")
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 USERS_CSV     = os.path.join(DATA_DIR, "users.csv")
 PASSWORDS_CSV = os.path.join(DATA_DIR, "passwords.csv")
 GRADES_CSV    = os.path.join(DATA_DIR, "grades.csv")
@@ -89,7 +89,7 @@ def load_grades():
         # Return an empty DataFrame with the correct columns
         return pd.DataFrame(columns=["student_id"] + SUBJECTS)
     
-    def save_grades(df):
+def save_grades(df):
     """Save a grades DataFrame to grades.csv."""
     df.to_csv(GRADES_CSV, index=False) 
 
