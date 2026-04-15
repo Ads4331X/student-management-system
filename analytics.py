@@ -231,8 +231,7 @@ class AnalyticsDashboard:
 
             # final layout adjustment and display
             plt.tight_layout(rect=[0, 0, 1, 0.96])
-            plt.show()
-
+            plt.show()   
         except Exception as e:
             err(f"  Dashboard error: {e}")
 
