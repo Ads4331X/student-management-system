@@ -239,3 +239,81 @@ class AnalyticsDashboard:
 
   
   
+    # performance alerts 
+    def performance_alerts(self):
+        """
+        Identify students with average below ALERT_AVG.
+        List their failing subjects and suggest interventions.
+        Uses pandas to filter and numpy to find failing subjects.
+        """
+        clear_screen(); banner(); section("PERFORMANCE ALERTS") # clear screen and display UI header
+
+        try:
+            # load datasets  grades, user, and ECA records
+            df = fh.load_grades()
+            users = fh.load_users()
+            eca = fh.load_eca()
+
+            if df.empty: # if no grade data is found
+                info("  No grade data available.")
+                input("\n  Press Enter to continue...")
+                return # exit early
+
+            df["average"] = df[SUBJECTS].astype(float).mean(axis=1) # student average across all subjects
+            at_risk = df[df["average"] < ALERT_AVG]  # filter students below alert threshold
+
+            if at_risk.empty: # no student are at_risk
+                ok(f"\n  All students are above the {ALERT_AVG:.0f}% alert threshold.")
+            else:
+                print(f"\n  {len(at_risk)} student(s) below {ALERT_AVG:.0f}% average:\n")
+                print("  " + "─" * 60)
+
+                for _, row in at_risk.iterrows(): # iterate through at_risk students
+                    # fetch student details
+                    sid  = row["student_id"]
+                    avg  = row["average"]
+                    user = fh.get_user_by_id(sid)
+                    name = user.full_name if user else sid
+                    acts = eca.get(sid, []) # get ECA activities for the student
+
+                    # find failing subjects using numpy comparison
+                    marks = np.array([float(row[s]) for s in SUBJECTS])
+                    # identify subjects where marks are below pass mark
+                    failed = [
+                        SUBJECTS[i].capitalize()
+                        for i in np.where(marks < PASS_MARK)[0]
+                        ]
+                    # letter grade based on average
+                    grade = (
+                        "A" if avg >= 80 else
+                        "B" if avg >= 70 else
+                        "C" if avg >= 60 else
+                        "D" if avg >= 50 else
+                        "F"
+                        )
+
+                    # output
+                    print(f"\n  {name} ({sid})")
+                    print(f"     Average  : {avg:.1f}  [Grade {grade}]")
+                    print(f"     Failing  : {', '.join(failed) if failed else 'None'}")
+                    print(f"     ECA count: {len(acts)}")
+
+                    # recommedations
+                    print(f"\n  Suggested Actions:")
+                    # intervention based on performance
+                    if avg < PASS_MARK:
+                        print("       • Arrange academic counselling immediately")
+                        print("       • Enrol in supplementary classes for failing subjects")
+                    else:
+                        print("       • Set up peer study groups for weak subjects")
+                    # encourage extracurricular participation if none exist
+                    if not acts: 
+                        print("       • Encourage joining at least one ECA activity")
+                    # always recommended action
+                    print("       • Send progress report to parent/guardian")
+                    print("  " + "─" * 60)
+
+        except Exception as e:
+            err(f"  Error: {e}")
+
+        input("\n\n  Press Enter to continue...") # pause before returning to menu
