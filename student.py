@@ -13,7 +13,7 @@ from utils import clear_screen, banner, section, ok, err, info
 
 
 class StudentPanel:
-    """Student operations view profile, grades, ECA, and personal chart."""
+    """Student operations: view profile, grades, ECA, and personal chart."""
 
     def __init__(self, user):
         # Store logged-in student user object
@@ -94,3 +94,34 @@ class StudentPanel:
             err(f"  Error: {e}")
 
         input("\n\n  Press Enter to continue...")
+
+    def update_profile(self):
+        """Allow the student to update their own email, phone, and address."""
+        clear_screen(); banner(); section("UPDATE MY PROFILE")
+        print("\n  (Press Enter to keep current value)\n")
+
+        try:
+            # Load all users from storage
+            users = fh.load_users()
+
+            # Get updated values from user input
+            new_email   = input(f"  Email   [{self.user.email}]: ").strip()
+            new_phone   = input(f"  Phone   [{self.user.phone}]: ").strip()
+            new_address = input(f"  Address [{self.user.address}]: ").strip()
+
+            # Update only if user entered new values
+            if new_email:   self.user.email   = new_email
+            if new_phone:   self.user.phone   = new_phone
+            if new_address: self.user.address = new_address
+
+            # Save updated user object back into dictionary
+            users[self.user.username] = self.user
+            fh.save_users(users)
+
+            ok("\n  Profile updated successfully.")
+
+        except Exception as e:
+            # Handle file write or data issues
+            err(f"  Error: {e}")
+
+        input("\n  Press Enter to continue...")
