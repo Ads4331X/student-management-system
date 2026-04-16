@@ -2,10 +2,36 @@
 Entry point for the Student Profile Management System
 """
 
+import sys
+from auth import AuthSystem
 from admin import AdminPanel
 from student import StudentPanel
 from analytics import AnalyticsDashboard
 from utils import clear_screen, banner, section, ok, err, info
+
+
+def main():
+    """Main loopshow landing screen and handle login."""
+    auth = AuthSystem()
+
+    while True:
+        clear_screen() # clears the screen
+        banner()  # displays the banner
+        # menu
+        print("\n  [1] Login")
+        print("  [2] Exit")
+        choice = input("\n  Choice: ").strip() # input choise of user
+
+        if choice == "1":
+            user = login_screen(auth) 
+            if user:
+                if user.role == "admin":
+                    admin_menu(user) # display admin menu
+                else:
+                    student_menu(user) # display student menu
+        elif choice == "2":
+            info("\n  Goodbye!\n") 
+            sys.exit(0)
 
 
 def login_screen(auth):
@@ -30,8 +56,9 @@ def login_screen(auth):
     input("  Press Enter to return to main menu...")
     return None
 
+
 def admin_menu(user):
-    """admin menu loop"""
+    """Admin menu loop."""
     panel     = AdminPanel(user)
     dashboard = AnalyticsDashboard()
 
@@ -65,7 +92,7 @@ def admin_menu(user):
 
 
 def student_menu(user):
-    """student menu loop."""
+    """Student menu loop."""
     panel = StudentPanel(user)
 
     options = {
@@ -93,4 +120,6 @@ def student_menu(user):
             input("  Press Enter to continue...")
 
 
+if __name__ == "__main__":
+    main()
 
