@@ -2,8 +2,6 @@
 Entry point for the Student Profile Management System
 """
 
-import sys
-from auth import AuthSystem
 from admin import AdminPanel
 from student import StudentPanel
 from analytics import AnalyticsDashboard
@@ -33,7 +31,7 @@ def login_screen(auth):
     return None
 
 def admin_menu(user):
-    """Admin menu loop"""
+    """admin menu loop"""
     panel     = AdminPanel(user)
     dashboard = AnalyticsDashboard()
 
@@ -64,4 +62,35 @@ def admin_menu(user):
         else:
             err("  Invalid choice.")
             input("  Press Enter to continue...")
+
+
+def student_menu(user):
+    """student menu loop."""
+    panel = StudentPanel(user)
+
+    options = {
+        "1": ("View My Profile",      panel.view_profile),
+        "2": ("View My Grades",       panel.view_grades),
+        "3": ("View My ECA",          panel.view_eca),
+        "4": ("Update My Profile",    panel.update_profile),
+        "5": ("View My Grade Chart",  panel.view_grade_chart),
+        "0": ("Logout",               None),
+    }
+
+    while True:
+        clear_screen(); banner() # clear screen and display banner
+        print(f"\n  STUDENT PORTAL — {user.full_name}\n")
+        for key, (label, _) in options.items():
+            print(f"  [{key}] {label}")
+
+        choice = input("\n  Choice: ").strip()
+        if choice == "0":
+            return
+        elif choice in options:
+            options[choice][1]()
+        else:
+            err("  Invalid choice.")
+            input("  Press Enter to continue...")
+
+
 
