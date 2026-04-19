@@ -1,5 +1,5 @@
 user_id,username,full_name,email,role,phone,address
-A001,admin,System Administrator,admin@spms.edu,admin,9800000000,SPMS Office
-S001,john,John Doe,john@spms.edu,student,9800000001,Kathmandu
-S002,jane,Jane Smith,jane@spms.edu,student,9800000002,Pokhara
-S003,ram,Ram Bahadur,ram@spms.edu,student,9800000003,Lalitpur
+A001,admin,System Administrator,admin@email.edu,admin,9800000000,test Office
+S001,john,John Doe,john@email.edu,student,9800000001,Kathmandu
+S002,jane,Jane Smith,jane@email.edu,student,9800000002,Pokhara
+S003,ram,Ram Bahadur,ram@email.edu,student,9800000003,Lalitpur
