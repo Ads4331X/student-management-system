@@ -1,0 +1,24 @@
+flowchart TD
+    A1([Start Program]) --> B1[Show Main Menu]
+    B1 --> C1{User Choice}
+    C1 -->|Exit| D1([Program Ends])
+
+    C1 -->|Login| E1[Enter Username & Password]
+    E1 --> F1{Correct?}
+
+    F1 -->|No| G1[Show Error]
+    G1 --> H1{3 Attempts Done?}
+    H1 -->|No| E1
+    H1 -->|Yes| I1[Too Many Attempts]
+    I1 --> B1
+
+    F1 -->|Yes| J1{Role?}
+    J1 -->|admin| K1[Admin Menu]
+    J1 -->|student| L1[Student Portal]
+
+    K1 --> M1[Admin Tasks]
+    L1 --> N1[Student Tasks]
+
+    M1 --> O1[Logout]
+    N1 --> O1
+    O1 --> B1

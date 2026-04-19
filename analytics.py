@@ -1,5 +1,5 @@
 """
-Performance Analytics Dashboard (Task 2 bonus).
+Performance Analytics Dashboard
 Implement advanced analytics using pandas, numpy, matplotlib.
 
 Features:
