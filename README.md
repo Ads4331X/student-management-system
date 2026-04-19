@@ -71,7 +71,7 @@ student_management_system/
 
 ### `main.py` — Entry point
 
-Starts the program. Shows the main menu (Login / Exit). After successful login, routes the user to either the **Admin menu** or **Student portal** depending on their role. Allows maximum **3 login attempts** before returning to main menu.
+Starts the program. Shows the main menu (Login and Exit). After successful login, routes the user to either the **Admin menu** or **Student portal** depending on their role. Allows maximum **3 login attempts** before returning to main menu.
 
 ### `auth.py` — Authentication
 
@@ -111,7 +111,7 @@ Five operations available from the student menu:
 4. Update my profile (email, phone, address only)
 5. View my grade chart (matplotlib bar chart)
 
-### `analytics.py` — Analytics dashboard (Task 2)
+### `analytics.py` — Analytics dashboard
 
 - **show_dashboard()** — displays a 4-panel matplotlib chart: subject averages, student averages, ECA vs grade scatter plot with trend line, and grade distribution pie chart
 - **performance_alerts()** — filters students below 55% average using pandas, finds failing subjects using numpy, and suggests personalised interventions
@@ -190,7 +190,7 @@ S001,Football Club;Debate Society;Coding Club
 
 | Library      | Purpose                                                                                                        |
 | ------------ | -------------------------------------------------------------------------------------------------------------- |
-| `pandas`     | Reading/writing CSV files as DataFrames, computing averages, filtering at-risk students                        |
+| `pandas`     | Reading, writing CSV files as DataFrames, computing averages, filtering at-risk students                       |
 | `numpy`      | Statistical functions (mean, std, max, min), Pearson correlation, trend line fitting, finding failing subjects |
 | `matplotlib` | Bar charts, horizontal bar charts, scatter plots, pie charts                                                   |
 
@@ -198,7 +198,7 @@ S001,Football Club;Debate Society;Coding Club
 
 ## Team Contributions
 
-| Member            | Files / Tasks                                                                                                  |
+| Member            | Files and Tasks                                                                                                |
 | ----------------- | -------------------------------------------------------------------------------------------------------------- |
 | [Adarsha Karki]   | [main.py, utils.py, student.py, analytics.py: Student portal, display helpers, analytics dashboard and charts] |
 | [Bishesh Thapa]   | [models.py, file_handler.pyOOP class design and all CSV file handling]                                         |
