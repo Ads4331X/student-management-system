@@ -17,8 +17,6 @@ PASSWORDS_CSV = os.path.join(DATA_DIR, "passwords.csv")
 GRADES_CSV    = os.path.join(DATA_DIR, "grades.csv")
 ECA_CSV       = os.path.join(DATA_DIR, "eca.csv")
 
-
-
 # users
 def load_users():
     """
@@ -42,7 +40,6 @@ def load_users():
     except FileNotFoundError:
         return {}
 
-
 def save_users(users):
     """Save a dict of {username: User} back to users.csv."""
     rows = [u.to_dict() for u in users.values()] # stores a list of dictionaries from user objects
@@ -58,7 +55,6 @@ def get_user_by_id(user_id):
             return user
     return None
 
-
 # passwords
 def load_passwords():
     """
@@ -69,13 +65,11 @@ def load_passwords():
         return dict(zip(df["username"], df["password"])) # convert username and password columns into a dictionary
     except FileNotFoundError:
         return {}
-    
 
 def save_passwords(passwords):
     """Save a dict of {username: password} to passwords.csv."""
     df = pd.DataFrame(list(passwords.items()), columns=["username", "password"])
     df.to_csv(PASSWORDS_CSV, index=False) # save passwords dictionary to CSV file
-
 
 # grades
 def load_grades():
@@ -88,7 +82,7 @@ def load_grades():
     except FileNotFoundError:
         # Return an empty DataFrame with the correct columns
         return pd.DataFrame(columns=["student_id"] + SUBJECTS)
-    
+
 def save_grades(df):
     """Save a grades DataFrame to grades.csv."""
     df.to_csv(GRADES_CSV, index=False) 
@@ -161,5 +155,3 @@ def upsert_student_eca(student_id, activities):
     eca = load_eca() # loads eca dataframe
     eca[student_id] = activities 
     save_eca(eca) # save to eca.csv file
-
-    

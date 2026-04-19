@@ -1,8 +1,8 @@
 """
-Admin panel: manage users, grades, ECA, and view insights
-Implement all admin operations
+Admin panel: manage users, grades, ECA, and view insights.
+Implement all admin operations.
 
-Uses pandas for grade insights and numpy for basic statistics
+Uses pandas for grade insights and numpy for basic statistics.
 """
 
 import numpy as np
@@ -21,7 +21,7 @@ class AdminPanel:
         self.user = user
         self.auth = AuthSystem()
 
-    # Add New Student 
+    # add new student 
     def add_student(self):
         """Prompt admin to enter details and register a new student."""
         clear_screen(); banner(); section("ADD NEW STUDENT") # clears screen , displays banner and shows selection of add new student
@@ -49,7 +49,7 @@ class AdminPanel:
 
         input("\n  Press Enter to continue...")
 
-    #  view all students 
+    #  view sll dtudents 
     def view_all_students(self):
         """Display a table of all registered students."""
         clear_screen(); banner(); section("ALL STUDENTS") # clear screen, show banner and section header
@@ -72,7 +72,7 @@ class AdminPanel:
 
         input("\n  Press Enter to continue...")
 
-    # update student profile
+    # update student profile 
     def update_student(self):
         """Update personal information for a student by ID."""
         clear_screen(); banner(); section("UPDATE STUDENT PROFILE") # clear screen, show banner and section header
@@ -117,7 +117,7 @@ class AdminPanel:
 
         input("\n  Press Enter to continue...")
 
-    # delete student
+    # delete student 
     def delete_student(self):
         """Delete a student and all their data after confirmation."""
         clear_screen(); banner(); section("DELETE STUDENT")
@@ -146,7 +146,6 @@ class AdminPanel:
 
         input("\n  Press Enter to continue...")
 
- 
     # update grades 
     def update_grades(self):
         """Enter or update marks for a student across all five subjects."""
@@ -261,8 +260,7 @@ class AdminPanel:
             err(f"  Error: {e}")
 
         input("\n  Press Enter to continue...")
-
-  
+        
     # grade insights 
     def view_insights(self):
         """

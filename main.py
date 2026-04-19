@@ -1,5 +1,12 @@
 """
-Entry point for the Student Profile Management System
+Entry point for the Student Profile Management System.
+
+Default logins:
+    username / password
+       admin / admin123
+       john  / john123
+       jane  / jane123
+       ram   / ram123
 """
 
 import sys
@@ -11,7 +18,7 @@ from utils import clear_screen, banner, section, ok, err, info
 
 
 def main():
-    """Main loopshow landing screen and handle login."""
+    """Main loop  show landing screen and handle login."""
     auth = AuthSystem()
 
     while True:

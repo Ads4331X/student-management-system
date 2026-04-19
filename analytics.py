@@ -1,6 +1,6 @@
 """
-Performance Analytics Dashboard
-Implement advanced analytics using pandas, numpy, matplotlib
+Performance Analytics Dashboard (Task 2 bonus).
+Implement advanced analytics using pandas, numpy, matplotlib.
 
 Features:
     - Grade trends per subject
@@ -16,20 +16,20 @@ import file_handler as fh
 from models import SUBJECTS
 from utils import clear_screen, banner, section, ok, err, info
 
-PASS_MARK = 50.0      # Below this = failing a subject
-ALERT_AVG = 55.0      # Below this average = at-risk student
-
+PASS_MARK = 50.0      # below this means failing a subject
+ALERT_AVG = 60.0      # below this average means low grade (at-risk student) 
 
 class AnalyticsDashboard:
     """Provides administrative analytics dashboard with charts and statistics."""
 
     # full dashboard 
     def show_dashboard(self):
-        """ Display 4 panel matplotlib dashboard
-        1. bar graph subject average
-        2. horizontal bar student average
-        3. scatter diagram on ECA vs grade average
-        4. pie chart in grade letter distribution
+        """
+        display a 4-panel matplotlib dashboard:
+        1. subject averages (bar graph)
+        2. Student averages (horizontal bar graph)
+        3. ECA vs grade average (scatter disgram)
+        4. Grade letter distribution (pie chart)
         """
         clear_screen(); banner(); section("ANALYTICS DASHBOARD") # UI setup
 
@@ -115,14 +115,14 @@ class AnalyticsDashboard:
                 ax1.text(i, v + 1, f"{v:.1f}", ha="center", fontsize=9)
 
             # pannel-2
-            # per student average (horizontal bar)
+            # per-student average (horizontal bar)
             ax2 = axes[0, 1]
             names = [] # list to store names
             for sid in df["student_id"]: # extract student name
                 u = fh.get_user_by_id(sid) # get user by its id
                 names.append(u.full_name.split()[0] if u else sid) # if name not found use student_id
             avgs = df["average"].values
-            # colors based on performance
+            # color-code students based on performance
             colors2 = [
                 "#4CAF50" if a >= 70 else
                 "#FF9800" if a >= 50 else
@@ -199,7 +199,7 @@ class AnalyticsDashboard:
             # grade letter distribution pie chart
             ax4 = axes[1, 1]
 
-            # convert number averages into letter grades
+            # number averages into letter grades
             def get_grade(avg):
                 return (
                     "A" if avg >= 80 else
@@ -231,14 +231,13 @@ class AnalyticsDashboard:
 
             # final layout adjustment and display
             plt.tight_layout(rect=[0, 0, 1, 0.96])
-            plt.show()   
+            plt.show()
+
         except Exception as e:
             err(f"  Dashboard error: {e}")
 
         input("\n\n  Press Enter to continue...")
 
-  
-  
     # performance alerts 
     def performance_alerts(self):
         """
@@ -300,7 +299,7 @@ class AnalyticsDashboard:
 
                     # recommedations
                     print(f"\n  Suggested Actions:")
-                    # intervention based on performance
+                    # academic intervention based on performance
                     if avg < PASS_MARK:
                         print("       • Arrange academic counselling immediately")
                         print("       • Enrol in supplementary classes for failing subjects")
