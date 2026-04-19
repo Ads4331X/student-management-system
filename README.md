@@ -201,8 +201,8 @@ S001,Football Club;Debate Society;Coding Club
 | Member            | Files and Tasks                                                                                                |
 | ----------------- | -------------------------------------------------------------------------------------------------------------- |
 | [Adarsha Karki]   | [main.py, utils.py, student.py, analytics.py: Student portal, display helpers, analytics dashboard and charts] |
-| [Bishesh Thapa]   | [models.py, file_handler.pyOOP class design and all CSV file handling]                                         |
-| [Jonisha Ghimire] | [auth.py, admin.pyLogin system and full admin panel]                                                           |
+| [Bishesh Thapa]   | [models.py, file_handler.py: OOP class design and all CSV file handling]                                       |
+| [Jonisha Ghimire] | [auth.py, admin.py: Login system and full admin panel]                                                         |
 
 ---
 
